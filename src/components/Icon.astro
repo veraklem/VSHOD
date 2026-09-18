@@ -4,7 +4,8 @@ interface Props {
   name: 'arrow' | 'mail' | 'telegram' | 'menu' | 'close' | 'external' | 'chevron'
   class?: string
 }
-const { name, class: className = '' } = Astro.props
+// ...rest пробрасывает data-astro-cid-*, чтобы scoped-стили родителя доставали до svg.
+const { name, class: className = '', ...rest } = Astro.props
 const paths: Record<Props['name'], string> = {
   arrow: 'M5 12h14M13 6l6 6-6 6',
   chevron: 'M9 6l6 6-6 6',
@@ -17,6 +18,7 @@ const paths: Record<Props['name'], string> = {
 ---
 
 <svg
+  {...rest}
   class={className}
   width="24"
   height="24"
