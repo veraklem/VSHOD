@@ -1,0 +1,165 @@
+---
+import { Picture } from 'astro:assets'
+import type { CollectionEntry } from 'astro:content'
+import { ACCENTS, tagById } from '../data/taxonomy'
+import Icon from './Icon.astro'
+
+interface Props {
+  product: CollectionEntry<'products'>
+  /** Первая карточка на странице грузится приоритетно. */
+  eager?: boolean
+  /** Уровень заголовка внутри карточки. */
+  as?: 'h2' | 'h3'
+}
+const { product, eager = false, as: Heading = 'h3' } = Astro.props
+const { data, id } = product
+const accent = ACCENTS[data.accent]
+const tags = data.tags.map(tagById).filter(Boolean).slice(0, 3)
+const href = `/catalog/${id}`
+---
+
+<article
+  class="card"
+  data-tags={data.tags.join(' ')}
+  style={`--accent:${accent.color};--accent-ink:${accent.ink};--accent-soft:${accent.soft}`}
+>
+  <a href={href} class="card__media" tabindex="-1" aria-hidden="true">
+    <Picture
+      src={data.image.bottle ?? data.image.scene}
+      alt=""
+      formats={['avif', 'webp']}
+        widths={[320, 480, 640, 900]}
+      sizes="(max-width: 40em) 92vw, (max-width: 64em) 46vw, 30vw"
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      class="card__img"
+    />
+    {data.status === 'coming' && <span class="card__badge">Скоро</span>}
+  </a>
+  <div class="card__body">
+    <span class="card__rule" aria-hidden="true"></span>
+    <Heading class="card__title">
+      <a href={href} class="card__link">{data.name}</a>
+    </Heading>
+    {data.techName && <p class="card__tech small muted">{data.techName}</p>}
+    <p class="card__tagline">{data.tagline}</p>
+    <ul class="card__tags" aria-label="Подходит для">
+      {tags.map((t) => <li class="chip">{t!.label}</li>)}
+    </ul>
+    <span class="card__more link-arrow" aria-hidden="true">
+      Подробнее <Icon name="arrow" class="arrow" />
+    </span>
+  </div>
+</article>
+
+<style>
+  .card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition:
+      border-color var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+  }
+  .card:hover,
+  .card:focus-within {
+    border-color: var(--line-strong);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover {
+      transform: translateY(-2px);
+    }
+  }
+  .card__media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--surface-2);
+    position: relative;
+  }
+  .card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms var(--ease-out);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .card:hover .card__img {
+      transform: scale(1.03);
+    }
+  }
+  .card__badge {
+    position: absolute;
+    top: var(--s-3);
+    left: var(--s-3);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--forest);
+    font-size: var(--fs-0);
+    font-weight: 600;
+    border: 1px solid var(--line);
+  }
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding: var(--s-5);
+    flex: 1;
+  }
+  .card__rule {
+    display: block;
+    width: 2rem;
+    height: 2px;
+    background: var(--accent);
+    margin-bottom: var(--s-2);
+  }
+  .card__title {
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  /* Ссылка растягивается на всю карточку. */
+  .card__link {
+    text-decoration: none;
+    color: var(--forest);
+  }
+  .card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .card__tech {
+    margin-top: calc(-1 * var(--s-1));
+    letter-spacing: 0.04em;
+  }
+  .card__tagline {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+  .card__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-2);
+  }
+  .card__more {
+    margin-top: auto;
+    padding-top: var(--s-4);
+    font-size: 0.9375rem;
+  }
+  .card:hover .card__more {
+    color: var(--green);
+  }
+  .card:hover .card__more .arrow {
+    transform: translateX(3px);
+  }
+</style>

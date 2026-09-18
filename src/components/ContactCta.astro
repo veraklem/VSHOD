@@ -1,0 +1,117 @@
+---
+/**
+ * Финальный блок связи. На сайте нет форм: сайт не собирает
+ * персональные данные, обращение идёт напрямую на почту или в Telegram.
+ */
+import { site, mailto } from '../data/site'
+import Icon from './Icon.astro'
+
+interface Props {
+  title?: string
+  text?: string
+  /** Тема письма. */
+  subject?: string
+  /** Название продукта, добавляется в тему письма. */
+  product?: string
+  /** Компактный вариант для страницы продукта. */
+  compact?: boolean
+  id?: string
+}
+const {
+  title = 'Остались вопросы? Напишите нам',
+  text = 'Ответим по продуктам, применению и условиям поставки. Без форм и регистрации: письмо или сообщение в Telegram.',
+  subject = site.mailSubjects.general,
+  product,
+  compact = false,
+  id = 'contact',
+} = Astro.props
+---
+
+<section class:list={['cta', { 'cta--compact': compact }]} id={id} aria-labelledby={`${id}-title`}>
+  <div class="container cta__inner">
+    <div class="cta__text">
+      <h2 id={`${id}-title`} class="cta__title">{title}</h2>
+      <p class="cta__lead">{text}</p>
+    </div>
+    <div class="cta__actions">
+      <a href={mailto(subject, product)} class="btn">
+        <Icon name="mail" class="arrow" />
+        Написать на почту
+      </a>
+      <a href={site.contacts.telegram} class="btn btn--secondary" rel="noopener" target="_blank">
+        <Icon name="telegram" class="arrow" />
+        Написать в Telegram
+      </a>
+      <p class="small muted cta__note">
+        {site.contacts.email} · Telegram {site.contacts.telegramHandle}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    background: var(--forest);
+    color: #f7f8f4;
+    padding-block: var(--section);
+  }
+  .cta--compact {
+    padding-block: var(--s-8);
+  }
+  .cta__inner {
+    display: grid;
+    gap: var(--s-6);
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: center;
+  }
+  @media (max-width: 48em) {
+    .cta__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+  .cta__title {
+    color: #f7f8f4;
+  }
+  .cta__lead {
+    margin-top: var(--s-4);
+    max-width: 34em;
+    color: var(--pale);
+  }
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    justify-self: start;
+  }
+  @media (min-width: 48em) {
+    .cta__actions {
+      justify-self: end;
+    }
+  }
+  .cta .btn {
+    --btn-bg: #f7f8f4;
+    --btn-fg: var(--forest);
+    --btn-line: #f7f8f4;
+  }
+  .cta .btn:hover {
+    --btn-bg: var(--pale);
+    --btn-line: var(--pale);
+  }
+  .cta .btn--secondary {
+    --btn-bg: transparent;
+    --btn-fg: #f7f8f4;
+    --btn-line: rgba(247, 248, 244, 0.45);
+  }
+  .cta .btn--secondary:hover {
+    --btn-bg: rgba(247, 248, 244, 0.1);
+    --btn-line: #f7f8f4;
+  }
+  .cta .btn:hover .arrow {
+    transform: none;
+  }
+  .cta__note {
+    flex-basis: 100%;
+    color: var(--pale);
+    opacity: 0.85;
+  }
+</style>

@@ -1,0 +1,252 @@
+---
+import Base from '../layouts/Base.astro'
+import Breadcrumbs from '../components/Breadcrumbs.astro'
+import Icon from '../components/Icon.astro'
+import GrowthLines from '../components/GrowthLines.astro'
+import { site, mailto } from '../data/site'
+
+const reasons = [
+  {
+    title: 'Общий вопрос',
+    text: 'Подбор продукта, применение, разведение, совместимость, наличие.',
+    href: mailto(site.mailSubjects.general),
+    label: 'Написать',
+  },
+  {
+    title: 'Оптовая поставка',
+    text: 'Объёмы, сроки производства, доставка и коммерческие условия для питомников, хозяйств и дистрибьюторов.',
+    href: mailto(site.mailSubjects.wholesale),
+    label: 'Запросить предложение',
+  },
+  {
+    title: 'Пилотное применение',
+    text: 'Проверка решения на вашей культуре или площадке. Формат, объём и критерии оценки согласуем индивидуально.',
+    href: mailto(site.mailSubjects.pilot),
+    label: 'Обсудить пилот',
+  },
+]
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Контакты', item: new URL('/contacts', Astro.site).href },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Контакты ВСХОД',
+    url: new URL('/contacts', Astro.site).href,
+  },
+]
+---
+
+<Base
+  title="Контакты ВСХОД: почта и Telegram"
+  description="Связаться с командой ВСХОД и INBIOLAB: вопросы по продуктам, оптовые поставки, пилотное применение. Почта и Telegram, без форм и регистрации."
+  jsonLd={jsonLd}
+>
+  <section class="container section--tight">
+    <Breadcrumbs items={[{ label: 'Контакты' }]} />
+    <div class="chead">
+      <div class="chead__text">
+        <p class="eyebrow">Контакты</p>
+        <h1>Напишите нам</h1>
+        <p class="lead">
+          На сайте нет форм: мы не собираем персональные данные. Письмо или сообщение в Telegram попадает
+          напрямую команде, отвечаем в рабочие дни.
+        </p>
+      </div>
+      <div class="channels">
+        <a href={`mailto:${site.contacts.email}`} class="channel">
+          <Icon name="mail" class="channel__icon" />
+          <span class="channel__label small muted">Почта</span>
+          <span class="channel__value">{site.contacts.email}</span>
+        </a>
+        <a href={site.contacts.telegram} class="channel" rel="noopener" target="_blank">
+          <Icon name="telegram" class="channel__icon" />
+          <span class="channel__label small muted">Telegram</span>
+          <span class="channel__value">{site.contacts.telegramHandle}</span>
+        </a>
+        {
+          site.contacts.phone && (
+            <a href={`tel:${site.contacts.phone.replace(/[^+\d]/g, '')}`} class="channel">
+              <span class="channel__label small muted">Телефон</span>
+              <span class="channel__value">{site.contacts.phone}</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section reasons" aria-labelledby="reasons-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="reasons-title">По какому вопросу</h2>
+        <p class="muted">Выберите тему, и в письме она подставится автоматически.</p>
+      </div>
+      <ul class="reasons__grid">
+        {
+          reasons.map((r) => (
+            <li class="reason">
+              <h3>{r.title}</h3>
+              <p>{r.text}</p>
+              <a href={r.href} class="link-arrow">
+                {r.label} <Icon name="arrow" class="arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="container section--tight legal">
+    <div class="legal__grid">
+      <div>
+        <p class="eyebrow">Бренд и разработчик</p>
+        <p class="prose">
+          ВСХОД — розничный бренд. Разработано <a href={site.developerUrl} rel="noopener" target="_blank">INBIOLAB</a>,
+          платформой микробных консорциумов. Владелец бренда: {site.legalName}.
+        </p>
+      </div>
+      <div>
+        <p class="eyebrow">Ещё каналы</p>
+        <ul class="legal__list">
+          <li><a href={site.contacts.telegramChannel} rel="noopener" target="_blank">Telegram-канал INBIOLAB</a></li>
+          <li><a href={site.developerUrl} rel="noopener" target="_blank">inbiolab.ru</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal__lines" aria-hidden="true"><GrowthLines arcs={3} /></div>
+  </section>
+</Base>
+
+<style>
+  .chead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--s-8);
+    margin-top: var(--s-6);
+    align-items: start;
+  }
+  .chead__text {
+    display: grid;
+    gap: var(--s-4);
+  }
+  .channels {
+    display: grid;
+    gap: var(--s-3);
+  }
+  .channel {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    grid-template-areas:
+      'icon label'
+      'icon value';
+    column-gap: var(--s-4);
+    padding: var(--s-5);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease-out);
+  }
+  .channel:hover {
+    border-color: var(--forest);
+  }
+  .channel__icon {
+    grid-area: icon;
+    color: var(--green);
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .channel__label {
+    grid-area: label;
+  }
+  .channel__value {
+    grid-area: value;
+    font-weight: 600;
+    color: var(--forest);
+    font-size: 1.125rem;
+    overflow-wrap: anywhere;
+  }
+  @media (max-width: 48em) {
+    .chead {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+  }
+
+  .reasons {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+  .reasons__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6) var(--s-7);
+  }
+  .reason {
+    display: grid;
+    gap: var(--s-2);
+    align-content: start;
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--line-strong);
+  }
+  .reason h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .reason p {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .reason .link-arrow {
+    margin-top: var(--s-2);
+  }
+  @media (max-width: 48em) {
+    .reasons__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .legal {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .legal__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--s-7);
+  }
+  .legal__grid .prose {
+    margin-top: var(--s-3);
+  }
+  .legal__list {
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+    margin-top: var(--s-3);
+  }
+  .legal__lines {
+    position: absolute;
+    right: -4rem;
+    bottom: -5rem;
+    width: 16rem;
+    color: var(--pale);
+    z-index: -1;
+    transform: scaleX(-1);
+  }
+  @media (max-width: 48em) {
+    .legal__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,33 @@
+---
+/** Небольшой набор линейных иконок 24×24, currentColor. */
+interface Props {
+  name: 'arrow' | 'mail' | 'telegram' | 'menu' | 'close' | 'external' | 'chevron'
+  class?: string
+}
+const { name, class: className = '' } = Astro.props
+const paths: Record<Props['name'], string> = {
+  arrow: 'M5 12h14M13 6l6 6-6 6',
+  chevron: 'M9 6l6 6-6 6',
+  mail: 'M4 6h16v12H4zM4 7l8 6 8-6',
+  telegram: 'M21 4L3 11l6 2 2 6 3-4 5 4zM9 13l10-8',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  close: 'M6 6l12 12M18 6L6 18',
+  external: 'M14 5h5v5M19 5l-9 9M17 13v6H5V7h6',
+}
+---
+
+<svg
+  class={className}
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={paths[name]}></path>
+</svg>

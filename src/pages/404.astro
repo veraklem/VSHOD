@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro'
+import Icon from '../components/Icon.astro'
+import GrowthLines from '../components/GrowthLines.astro'
+---
+
+<Base title="Страница не найдена" description="Такой страницы на сайте ВСХОД нет." noindex>
+  <section class="nf container">
+    <p class="eyebrow">Ошибка 404</p>
+    <h1>Здесь ничего не выросло</h1>
+    <p class="lead">Страницы по этому адресу нет. Возможно, ссылка устарела или в ней опечатка.</p>
+    <div class="nf__actions">
+      <a href="/" class="btn">На главную</a>
+      <a href="/catalog" class="link-arrow">Посмотреть продукты <Icon name="arrow" class="arrow" /></a>
+    </div>
+    <div class="nf__lines" aria-hidden="true"><GrowthLines /></div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    gap: var(--s-4);
+    padding-block: var(--s-9);
+    min-height: 60vh;
+    align-content: center;
+  }
+  .nf__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-5);
+    margin-top: var(--s-3);
+  }
+  .nf__lines {
+    position: absolute;
+    right: -3rem;
+    bottom: -3rem;
+    width: 16rem;
+    color: var(--leaf);
+    z-index: -1;
+    transform: scaleX(-1);
+  }
+</style>

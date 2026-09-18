@@ -1,0 +1,360 @@
+---
+import { Picture } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import Breadcrumbs from '../components/Breadcrumbs.astro'
+import ContactCta from '../components/ContactCta.astro'
+import Icon from '../components/Icon.astro'
+import { site, mailto } from '../data/site'
+import heroImg from '../assets/scenes/b2b-nursery-rows.jpg'
+import gardenImg from '../assets/scenes/landscape-dawn-garden.jpg'
+
+const audiences = [
+  {
+    title: 'Питомники',
+    text: 'Декоративные и плодовые культуры, производство посадочного материала. Обработка субстрата, черенков и корневой системы при укоренении, перевалке и подготовке партий к реализации.',
+  },
+  {
+    title: 'Фермерские хозяйства',
+    text: 'Овощи открытого и защищённого грунта, ягодники, сады. Подготовка почвы, рассада, сезонные обработки по регламенту и обработка продукции перед закладкой на хранение.',
+  },
+  {
+    title: 'Агрохолдинги',
+    text: 'Растениеводство, хранение урожая, промышленные сады. Под задачу предприятия INBIOLAB собирает консорциум, проводит испытания и формирует регламент под ваше оборудование и циклы.',
+  },
+  {
+    title: 'Дистрибьюторы',
+    text: 'Розничная линейка ВСХОД для садовых центров и маркетплейсов. Готовые описания, паспорта продуктов и контент для карточек товара.',
+  },
+  {
+    title: 'Озеленение и газоны',
+    text: 'Профессиональный уход за газонами, спортивными и парковыми объектами: подготовка основания, укладка рулонного газона, восстановление после нагрузок.',
+  },
+  {
+    title: 'Хранение и переработка',
+    text: 'Овощехранилища, склады, тара. Биозащита продукции от гнилей и плесеней без химических дезинфектантов.',
+  },
+]
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Для бизнеса', item: new URL('/business', Astro.site).href },
+    ],
+  },
+]
+---
+
+<Base
+  title="Для бизнеса: оптовые поставки и пилотное применение ВСХОД"
+  description="Микробиологические решения ВСХОД и INBIOLAB для питомников, фермерских хозяйств, агрохолдингов и дистрибьюторов. Оптовая поставка, пилотное применение, регламенты под вашу культуру."
+  ogImage={heroImg}
+  jsonLd={jsonLd}
+>
+  <section class="bhero">
+    <div class="bhero__text">
+      <Breadcrumbs items={[{ label: 'Для бизнеса' }]} />
+      <p class="eyebrow">Для бизнеса</p>
+      <h1>Профессиональный сектор — главное направление нашей работы</h1>
+      <p class="lead">
+        ВСХОД вырос из промышленных решений INBIOLAB, которые применяются в питомниках, хозяйствах и на предприятиях
+        АПК. Мы открыты к сотрудничеству: подбираем продукт под вашу культуру, согласуем объёмы и вместе проверяем
+        результат на вашей площадке.
+      </p>
+      <div class="bhero__actions">
+        <a href={mailto(site.mailSubjects.wholesale)} class="btn">Запросить оптовое предложение</a>
+        <a href={mailto(site.mailSubjects.pilot)} class="btn btn--secondary">Обсудить пилот</a>
+      </div>
+    </div>
+    <div class="bhero__media">
+      <Picture
+        src={heroImg}
+        alt="Ряды саженцев в контейнерах в питомнике на рассвете"
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1672]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="bhero__img"
+      />
+    </div>
+  </section>
+
+  <!-- Форматы сотрудничества -->
+  <section class="section" aria-labelledby="formats-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Форматы сотрудничества</p>
+        <h2 id="formats-title">Два способа начать</h2>
+      </div>
+      <div class="formats reveal">
+        <article class="format">
+          <h3>Оптовая поставка</h3>
+          <p>
+            Для клиента, который уже выбрал продукт. Обсуждаем доступные объёмы, сроки производства, доставку и
+            коммерческие условия. Розничная линейка поставляется во флаконах, профессиональные решения INBIOLAB —
+            в канистрах 5 и 10 л.
+          </p>
+          <ul class="format__list">
+            <li>Объёмы и сроки под сезон</li>
+            <li>Паспорта продуктов и паспорт партии с титром живых клеток</li>
+            <li>Материалы для карточек товара и садовых центров</li>
+          </ul>
+          <a href={mailto(site.mailSubjects.wholesale)} class="btn">Запросить оптовое предложение</a>
+        </article>
+        <article class="format">
+          <h3>Пилотное применение</h3>
+          <p>
+            Для клиента, которому нужно проверить решение на своей культуре или площадке до закупки объёма.
+            Формат, объём и критерии оценки согласуются индивидуально: фиксируем исходное состояние, регламент
+            обработок и показатели, по которым оцениваем результат.
+          </p>
+          <ul class="format__list">
+            <li>Регламент под вашу культуру, субстрат и схему полива</li>
+            <li>Согласованные критерии оценки до старта</li>
+            <li>Сопровождение специалиста INBIOLAB</li>
+          </ul>
+          <a href={mailto(site.mailSubjects.pilot)} class="btn btn--secondary">Обсудить пилот</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Аудитории -->
+  <section class="section aud" aria-labelledby="aud-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">С кем работаем</p>
+        <h2 id="aud-title">Сценарии применения</h2>
+        <p class="lead">
+          Показываем только то, что подтверждено паспортами продуктов и практикой INBIOLAB. Если вашей задачи здесь
+          нет, напишите: под неё можно собрать отдельное решение.
+        </p>
+      </div>
+      <ul class="aud__grid reveal">
+        {
+          audiences.map((a) => (
+            <li class="aud__item">
+              <h3>{a.title}</h3>
+              <p>{a.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Как проходит работа -->
+  <section class="how">
+    <div class="how__media">
+      <Picture
+        src={gardenImg}
+        alt="Сад и теплицы на холмах в утреннем тумане"
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1672]}
+        sizes="(max-width: 56em) 100vw, 50vw"
+        loading="lazy"
+        class="how__img"
+      />
+    </div>
+    <div class="how__text reveal">
+      <p class="eyebrow">Как проходит работа</p>
+      <h2>От задачи до регламента</h2>
+      <ol class="how__steps">
+        <li>
+          <strong>Задача.</strong> Вы описываете культуру, площадку, текущую схему и что хотите изменить.
+        </li>
+        <li>
+          <strong>Подбор.</strong> Предлагаем продукт из линейки или профессиональное решение INBIOLAB.
+        </li>
+        <li>
+          <strong>Регламент.</strong> Дозировки, сроки, способ внесения, совместимость с вашей схемой защиты.
+        </li>
+        <li>
+          <strong>Проверка или поставка.</strong> Пилот с согласованными критериями либо сразу партия под сезон.
+        </li>
+      </ol>
+      <a href="/about" class="link-arrow">О платформе INBIOLAB <Icon name="arrow" class="arrow" /></a>
+    </div>
+  </section>
+
+  <ContactCta
+    title="Готовы к сотрудничеству"
+    text="Напишите, с какой культурой и в каком объёме работаете. Ответим по продуктам, объёмам и формату пилота."
+    subject={site.mailSubjects.wholesale}
+  />
+</Base>
+
+<style>
+  .bhero {
+    display: grid;
+    border-bottom: 1px solid var(--line);
+  }
+  .bhero__text {
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-6) var(--gutter) var(--s-8);
+    width: min(100% - 2 * var(--gutter), var(--container));
+    margin-inline: auto;
+    padding-inline: 0;
+    max-width: none;
+  }
+  .bhero__text h1 {
+    max-width: 16em;
+  }
+  .bhero__text .eyebrow {
+    margin-top: var(--s-3);
+  }
+  .bhero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-top: var(--s-2);
+  }
+  .bhero__media {
+    aspect-ratio: 21 / 9;
+    min-height: 16rem;
+    max-height: 34rem;
+    position: relative;
+  }
+  .bhero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .formats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-5);
+  }
+  .format {
+    display: grid;
+    gap: var(--s-4);
+    align-content: start;
+    padding: var(--s-6);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .format p {
+    color: var(--ink-2);
+  }
+  .format__list {
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  .format__list li {
+    padding-left: 1.25rem;
+    position: relative;
+  }
+  .format__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--green);
+  }
+  .format .btn {
+    justify-self: start;
+    margin-top: var(--s-2);
+  }
+  @media (max-width: 48em) {
+    .formats {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .aud {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+  .aud__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6) var(--s-7);
+  }
+  .aud__item {
+    display: grid;
+    gap: var(--s-2);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--line-strong);
+  }
+  .aud__item h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .aud__item p {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 64em) {
+    .aud__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40em) {
+    .aud__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .how {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .how__media {
+    position: relative;
+    min-height: 22rem;
+  }
+  .how__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .how__text {
+    display: grid;
+    gap: var(--s-5);
+    align-content: center;
+    padding: var(--section) max(var(--gutter), calc((100vw - var(--container)) / 2)) var(--section) var(--s-8);
+  }
+  .how__steps {
+    display: grid;
+    gap: var(--s-4);
+    padding-left: 1.5rem;
+    color: var(--ink-2);
+    max-width: 34em;
+  }
+  .how__steps li::marker {
+    color: var(--leaf);
+    font-weight: 600;
+  }
+  .how__steps strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  @media (max-width: 56em) {
+    .how {
+      grid-template-columns: 1fr;
+    }
+    .how__media {
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+    }
+    .how__text {
+      padding: var(--s-7) var(--gutter);
+    }
+  }
+</style>

@@ -1,0 +1,406 @@
+---
+import { Picture } from 'astro:assets'
+import { getCollection } from 'astro:content'
+import Base from '../layouts/Base.astro'
+import ProductCard from '../components/ProductCard.astro'
+import ContactCta from '../components/ContactCta.astro'
+import GrowthLines from '../components/GrowthLines.astro'
+import Icon from '../components/Icon.astro'
+import { site } from '../data/site'
+import heroImg from '../assets/scenes/hero-seedling-tray.jpg'
+import trustImg from '../assets/scenes/landscape-dawn-field.jpg'
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order)
+const featured = products.filter((p) => p.data.status === 'active').slice(0, 6)
+
+const steps = [
+  {
+    title: 'Заселяют прикорневую зону',
+    text: 'Живые бактерии закрепляются в почве или субстрате рядом с корнями и восстанавливают микрофлору, которую вымывают поливы.',
+  },
+  {
+    title: 'Кормят растение',
+    text: 'Вырабатывают фитогормоны, витамины группы B, амино- и органические кислоты, связывают азот из воздуха и переводят фосфор в доступную форму.',
+  },
+  {
+    title: 'Не оставляют места гнилям',
+    text: 'Плотно занимая пространство вокруг корней, полезные штаммы ограничивают развитие возбудителей корневых гнилей.',
+  },
+]
+---
+
+<Base
+  title="ВСХОД — микробиологические решения для растений, урожая и почвы"
+  description="ВСХОД: линейка живых бактерий для рассады, огорода, сада, газона, компоста и хранения урожая. Для дома, питомников и сельскохозяйственного бизнеса. Разработано INBIOLAB."
+  ogImage={heroImg}
+>
+  <!-- Первый экран -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__text">
+      <p class="eyebrow">{site.tagline}</p>
+      <h1 id="hero-title">Микро&shy;биологические решения для&nbsp;растений, урожая и&nbsp;почвы</h1>
+      <p class="lead">
+        ВСХОД — линейка живых бактерий для дома и сада, питомников и сельскохозяйственного бизнеса.
+        Каждый продукт решает одну понятную задачу: от подготовки семян до хранения урожая.
+      </p>
+      <div class="hero__actions">
+        <a href="/catalog" class="btn">Подобрать продукт <Icon name="arrow" class="arrow" /></a>
+        <a href="/business" class="btn btn--secondary">Решения для бизнеса</a>
+      </div>
+      <p class="hero__note small muted">
+        Разработано <a href={site.developerUrl} rel="noopener" target="_blank">INBIOLAB</a>
+        {' · '}{site.ozon.available ? 'Купить на Ozon' : 'Скоро на Ozon'}
+      </p>
+      <div class="hero__lines" aria-hidden="true"><GrowthLines /></div>
+    </div>
+    <div class="hero__media">
+      <Picture
+        src={heroImg}
+        alt="Молодая рассада в кассете на подоконнике в утреннем свете"
+        formats={['avif', 'webp']}
+        widths={[480, 720, 960, 1122]}
+        sizes="(max-width: 56em) 100vw, 55vw"
+        loading="eager"
+        fetchpriority="high"
+        class="hero__img"
+      />
+    </div>
+  </section>
+
+  <!-- Два входа -->
+  <section class="paths section--tight" aria-label="Кому подходит">
+    <div class="container paths__grid">
+      <a href="/catalog" class="path reveal">
+        <p class="eyebrow">Для дома и сада</p>
+        <h2 class="path__title">Подобрать средство под свою задачу</h2>
+        <p class="path__text">
+          Рассада, огород, ягоды, комнатные растения, газон, компост, хранение урожая, защита от вредителей.
+          Один флакон — одна понятная задача.
+        </p>
+        <span class="link-arrow">Полный каталог <Icon name="arrow" class="arrow" /></span>
+      </a>
+      <a href="/business" class="path reveal">
+        <p class="eyebrow">Для бизнеса</p>
+        <h2 class="path__title">Оптовые поставки и пилотное применение</h2>
+        <p class="path__text">
+          Питомники, фермерские хозяйства, агрохолдинги, дистрибьюторы, профессиональное озеленение.
+          Подбираем продукт, согласуем объёмы и формат проверки на вашей культуре.
+        </p>
+        <span class="link-arrow">Как мы работаем с бизнесом <Icon name="arrow" class="arrow" /></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Каталог -->
+  <section class="section" aria-labelledby="catalog-title">
+    <div class="container">
+      <div class="section-head section-head--row reveal">
+        <div>
+          <p class="eyebrow">Продукты</p>
+          <h2 id="catalog-title">Линейка ВСХОД</h2>
+        </div>
+        <a href="/catalog" class="link-arrow">Все {products.length} продуктов <Icon name="arrow" class="arrow" /></a>
+      </div>
+      <div class="grid reveal">
+        {featured.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Технология -->
+  <section class="section tech" aria-labelledby="tech-title">
+    <div class="container">
+      <div class="tech__grid">
+        <div class="tech__intro reveal">
+          <p class="eyebrow">Как это работает</p>
+          <h2 id="tech-title">Живые бактерии вместо химии</h2>
+          <p class="tech__lead">
+            В каждом флаконе — консорциум живых непатогенных бактерий, подобранный под конкретную культуру или задачу.
+            Класс опасности IV: безопасно для людей и животных, специальные средства защиты не требуются.
+          </p>
+          <a href="/about" class="link-arrow">Подробнее о технологии <Icon name="arrow" class="arrow" /></a>
+        </div>
+        <ol class="steps reveal">
+          {
+            steps.map((s, i) => (
+              <li class="step">
+                <span class="step__n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="step__title">{s.title}</h3>
+                <p class="step__text">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Основания доверять -->
+  <section class="trust" aria-labelledby="trust-title">
+    <div class="trust__media">
+      <Picture
+        src={trustImg}
+        alt="Утренний туман над полем и рекой на рассвете"
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1672]}
+        sizes="(max-width: 56em) 100vw, 50vw"
+        loading="lazy"
+        class="trust__img"
+      />
+    </div>
+    <div class="trust__text reveal">
+      <p class="eyebrow">Разработано INBIOLAB</p>
+      <h2 id="trust-title">Розничный бренд научной платформы</h2>
+      <div class="prose">
+        <p>
+          ВСХОД — розничная линейка INBIOLAB, биотехнологической R&amp;D-платформы, которая разрабатывает, тестирует
+          и внедряет микробиологические консорциумы под прикладные задачи. Платформа входит в группу компаний
+          «ИНБИОЛАБ АГРО» с 25-летним опытом работы в агросекторе.
+        </p>
+        <p>
+          Те же подходы, что применяются на сотнях тысяч гектаров в сельском хозяйстве, здесь упакованы во флакон
+          для дома и сада. Титр живых клеток каждой партии подтверждается паспортом партии.
+        </p>
+      </div>
+      <a href="/about" class="link-arrow">О компании и технологии <Icon name="arrow" class="arrow" /></a>
+    </div>
+  </section>
+
+  <ContactCta />
+</Base>
+
+<style>
+  /* ---------- hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    min-height: min(84vh, 46rem);
+    border-bottom: 1px solid var(--line);
+  }
+  .hero__text {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--s-5);
+    padding: var(--s-9) var(--s-7) var(--s-9) max(var(--gutter), calc((100vw - var(--container)) / 2));
+    overflow: hidden;
+  }
+  .hero__text h1 {
+    max-width: 12em;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-top: var(--s-2);
+  }
+  .hero__note {
+    margin-top: var(--s-2);
+  }
+  .hero__lines {
+    position: absolute;
+    left: -2rem;
+    bottom: -1.5rem;
+    width: 14rem;
+    color: var(--leaf);
+    z-index: -1;
+  }
+  .hero__media {
+    position: relative;
+    min-height: 22rem;
+  }
+  .hero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 45% 50%;
+  }
+  @media (max-width: 56em) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .hero__text {
+      padding: var(--s-7) var(--gutter);
+      order: 1;
+    }
+    .hero__media {
+      order: 0;
+      aspect-ratio: 5 / 4;
+      min-height: 0;
+    }
+    .hero__lines {
+      width: 10rem;
+    }
+  }
+
+  /* ---------- два входа ---------- */
+  .paths__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .path {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-7) var(--s-6);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--dur) var(--ease-out);
+  }
+  .path + .path {
+    border-left: 1px solid var(--line);
+  }
+  .path:hover {
+    background: var(--surface-2);
+  }
+  .path__title {
+    font-size: var(--fs-3);
+    max-width: 16em;
+  }
+  .path__text {
+    color: var(--ink-2);
+    max-width: 36em;
+  }
+  .path .link-arrow {
+    margin-top: var(--s-3);
+  }
+  @media (max-width: 48em) {
+    .paths__grid {
+      grid-template-columns: 1fr;
+    }
+    .path + .path {
+      border-left: 0;
+      border-top: 1px solid var(--line);
+    }
+    .path {
+      padding: var(--s-6) var(--s-5);
+    }
+  }
+
+  /* ---------- сетка карточек ---------- */
+  .grid {
+    display: grid;
+    gap: var(--s-5);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @media (max-width: 64em) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40em) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- технология ---------- */
+  .tech {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+  .tech__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--s-8);
+    align-items: start;
+  }
+  .tech__intro {
+    display: grid;
+    gap: var(--s-4);
+    position: sticky;
+    top: 6rem;
+  }
+  .tech__lead {
+    color: var(--ink-2);
+    max-width: 30em;
+  }
+  .steps {
+    list-style: none;
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr);
+    grid-template-areas:
+      'n title'
+      'n text';
+    column-gap: var(--s-4);
+    row-gap: var(--s-2);
+    padding-block: var(--s-6);
+    border-bottom: 1px solid var(--line);
+  }
+  .step__n {
+    grid-area: n;
+    font-size: var(--fs-0);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--leaf);
+    padding-top: 0.35em;
+  }
+  .step__title {
+    grid-area: title;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .step__text {
+    grid-area: text;
+    color: var(--ink-2);
+    max-width: 36em;
+  }
+  @media (max-width: 56em) {
+    .tech__grid {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+    .tech__intro {
+      position: static;
+    }
+  }
+
+  /* ---------- доверие ---------- */
+  .trust {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .trust__media {
+    position: relative;
+    min-height: 22rem;
+  }
+  .trust__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .trust__text {
+    display: grid;
+    gap: var(--s-5);
+    align-content: center;
+    padding: var(--section) max(var(--gutter), calc((100vw - var(--container)) / 2)) var(--section) var(--s-8);
+  }
+  @media (max-width: 56em) {
+    .trust {
+      grid-template-columns: 1fr;
+    }
+    .trust__media {
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+    }
+    .trust__text {
+      padding: var(--s-7) var(--gutter);
+    }
+  }
+</style>

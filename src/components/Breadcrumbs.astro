@@ -1,0 +1,59 @@
+---
+import Icon from './Icon.astro'
+
+interface Crumb {
+  label: string
+  href?: string
+}
+interface Props {
+  items: Crumb[]
+}
+const { items } = Astro.props
+---
+
+<nav class="crumbs" aria-label="Вы здесь">
+  <ol class="crumbs__list">
+    <li><a href="/">Главная</a></li>
+    {
+      items.map((c) => (
+        <li>
+          <Icon name="chevron" class="crumbs__sep" />
+          {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs__list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-1);
+    font-size: var(--fs-0);
+    color: var(--ink-3);
+  }
+  .crumbs__list li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-1);
+  }
+  .crumbs__list a {
+    text-decoration: none;
+    color: var(--ink-3);
+  }
+  .crumbs__list a:hover {
+    color: var(--forest);
+    text-decoration: underline;
+  }
+  .crumbs__sep {
+    width: 0.9rem;
+    height: 0.9rem;
+    opacity: 0.6;
+  }
+  [aria-current='page'] {
+    color: var(--ink-2);
+  }
+</style>

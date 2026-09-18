@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Домен подставить после выбора (см. astro.config.mjs → site)
+Sitemap: https://vshod.example/sitemap-index.xml

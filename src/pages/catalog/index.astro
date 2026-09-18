@@ -1,0 +1,172 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import Breadcrumbs from '../../components/Breadcrumbs.astro'
+import ProductCard from '../../components/ProductCard.astro'
+import ContactCta from '../../components/ContactCta.astro'
+import { TAGS } from '../../data/taxonomy'
+import { site } from '../../data/site'
+
+const products = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order)
+const usedTags = TAGS.filter((t) => products.some((p) => p.data.tags.includes(t.id)))
+
+/*
+ * Фильтр без JavaScript: радиокнопки + :has(). Выбранная метка скрывает
+ * карточки, у которых её нет в data-tags. В браузерах без :has() показаны все.
+ */
+const filterCss = usedTags
+  .map((t) => `.catalog:has(#f-${t.id}:checked) .card:not([data-tags~="${t.id}"]){display:none}`)
+  .join('\n')
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Продукты', item: new URL('/catalog', Astro.site).href },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Продукты ВСХОД',
+    itemListElement: products.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: p.data.name,
+      url: new URL(`/catalog/${p.id}`, Astro.site).href,
+    })),
+  },
+]
+---
+
+<Base
+  title="Продукты ВСХОД: каталог микробиологических препаратов для растений"
+  description="Все продукты линейки ВСХОД: для рассады, овощей, ягод, сада, комнатных растений, газона, компоста, хранения урожая и защиты от вредителей. Подбор по задаче."
+  jsonLd={jsonLd}
+>
+  <div class="catalog">
+    <section class="container section--tight">
+      <Breadcrumbs items={[{ label: 'Продукты' }]} />
+      <div class="head">
+        <div>
+          <p class="eyebrow">Каталог</p>
+          <h1>Продукты ВСХОД</h1>
+          <p class="lead">
+            {products.length} средств на основе живых бактерий. Выберите задачу, и мы покажем подходящие продукты.
+            Один продукт может подходить для нескольких ситуаций.
+          </p>
+        </div>
+        <p class="small muted head__note">
+          Продажи открываются на Ozon. {site.ozon.available ? '' : 'Пока — по вопросам наличия пишите нам.'}
+        </p>
+      </div>
+
+      <fieldset class="filter">
+        <legend class="visually-hidden">Что вам нужно?</legend>
+        <p class="filter__label small muted" aria-hidden="true">Что вам нужно?</p>
+        <div class="filter__chips">
+          <input type="radio" name="filter" id="f-all" class="visually-hidden" checked />
+          <label for="f-all" class="filter__chip">Все продукты</label>
+          {
+            usedTags.map((t) => (
+              <>
+                <input type="radio" name="filter" id={`f-${t.id}`} class="visually-hidden" />
+                <label for={`f-${t.id}`} class="filter__chip" title={t.hint}>
+                  {t.label}
+                </label>
+              </>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <div class="grid" id="products">
+        {products.map((p, i) => <ProductCard product={p} as="h2" eager={i === 0} />)}
+      </div>
+    </section>
+  </div>
+
+  <ContactCta title="Не нашли подходящее средство?" text="Опишите культуру и задачу — подскажем, что из линейки подойдёт, или что появится позже." />
+</Base>
+
+<style is:inline set:html={filterCss}></style>
+
+<style>
+  .head {
+    display: grid;
+    gap: var(--s-4);
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    margin-top: var(--s-6);
+  }
+  .head h1 {
+    margin-block: var(--s-3);
+  }
+  .head__note {
+    max-width: 18em;
+  }
+  @media (max-width: 48em) {
+    .head {
+      grid-template-columns: 1fr;
+    }
+  }
+  .filter {
+    border: 0;
+    padding: 0;
+    margin: var(--s-7) 0 var(--s-6);
+    display: grid;
+    gap: var(--s-3);
+  }
+  .filter__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .filter__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    padding: 0.35rem 0.875rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out),
+      color var(--dur) var(--ease-out);
+  }
+  .filter__chip:hover {
+    border-color: var(--forest);
+    color: var(--forest);
+  }
+  input:checked + .filter__chip {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: #f7f8f4;
+  }
+  input:focus-visible + .filter__chip {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+  }
+  .grid {
+    display: grid;
+    gap: var(--s-5);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @media (max-width: 64em) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40em) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,299 @@
+---
+import { Picture } from 'astro:assets'
+import Base from '../layouts/Base.astro'
+import Breadcrumbs from '../components/Breadcrumbs.astro'
+import ContactCta from '../components/ContactCta.astro'
+import GrowthLines from '../components/GrowthLines.astro'
+import Icon from '../components/Icon.astro'
+import { site } from '../data/site'
+import heroImg from '../assets/scenes/mbiofit-plant-lake.jpg'
+import fieldImg from '../assets/scenes/landscape-dawn-garden.jpg'
+
+const principles = [
+  {
+    title: 'Консорциум, а не один штамм',
+    text: 'В каждом продукте работает сообщество живых непатогенных бактерий, подобранное под конкретную культуру или задачу: рассаду, ягоды, компост, хранение.',
+  },
+  {
+    title: 'Живые клетки, подтверждённые паспортом',
+    text: 'Продукты выпускаются в виде жидкого концентрата. Титр живых клеток каждой партии подтверждается паспортом партии.',
+  },
+  {
+    title: 'Безопасность для людей и животных',
+    text: 'Класс опасности IV. Специальные средства защиты не требуются, продукция после обработки пригодна в пищу без срока ожидания, достаточно вымыть её водой. Для препарата от насекомых действуют отдельные меры.',
+  },
+  {
+    title: 'Совместимость с обычной практикой',
+    text: 'Продукты чередуют с органическими и минеральными подкормками, вносят через капельный полив и опрыскиватели. С химическими средствами защиты выдерживают паузу 3–4 дня.',
+  },
+]
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'О технологии', item: new URL('/about', Astro.site).href },
+    ],
+  },
+]
+---
+
+<Base
+  title="О технологии: живые бактерии ВСХОД и платформа INBIOLAB"
+  description="Как работают микробиологические консорциумы ВСХОД, кто их разрабатывает и почему они безопасны. О платформе INBIOLAB и экосистеме брендов."
+  ogImage={heroImg}
+  jsonLd={jsonLd}
+>
+  <section class="ahero">
+    <div class="ahero__text">
+      <Breadcrumbs items={[{ label: 'О технологии' }]} />
+      <p class="eyebrow">О технологии</p>
+      <h1>Наука, которая помогает природе раскрыться</h1>
+      <p class="lead">
+        ВСХОД переносит в домашний сад и небольшие хозяйства подход, который INBIOLAB применяет в промышленном
+        сельском хозяйстве: вместо одного действующего вещества — живое сообщество микроорганизмов, подобранное
+        под задачу.
+      </p>
+      <div class="ahero__lines" aria-hidden="true"><GrowthLines /></div>
+    </div>
+    <div class="ahero__media">
+      <Picture
+        src={heroImg}
+        alt="Молодое растение у озера в рассветном свете"
+        formats={['avif', 'webp']}
+        widths={[480, 720, 960, 1122]}
+        sizes="(max-width: 56em) 100vw, 50vw"
+        loading="eager"
+        fetchpriority="high"
+        class="ahero__img"
+      />
+    </div>
+  </section>
+
+  <!-- Принципы -->
+  <section class="section" aria-labelledby="principles-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Как это работает</p>
+        <h2 id="principles-title">Четыре принципа линейки</h2>
+      </div>
+      <ul class="principles reveal">
+        {
+          principles.map((p) => (
+            <li class="principle">
+              <h3>{p.title}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Механизм -->
+  <section class="section mech" aria-labelledby="mech-title">
+    <div class="container mech__grid">
+      <div class="reveal">
+        <p class="eyebrow">В почве</p>
+        <h2 id="mech-title">Что происходит после полива</h2>
+      </div>
+      <div class="prose reveal">
+        <p>
+          Бактерии закрепляются в почве или субстрате и прикорневой зоне и начинают вырабатывать вещества, нужные
+          растению для роста: фитогормоны, витамины группы B, амино- и органические кислоты. Часть штаммов
+          связывает азот из воздуха и переводит фосфор из недоступных форм в доступные.
+        </p>
+        <p>
+          Плотно занимая пространство вокруг корней, полезные бактерии не оставляют места возбудителям корневых
+          гнилей. В компосте работают бактерии-деструкторы, которые расщепляют клетчатку, белки и жиры. При
+          хранении урожая — бактерии-антагонисты, которые конкурируют с гнилями и плесенями на поверхности плодов.
+          Против насекомых — энтомопатогенные микроорганизмы, безопасные для пчёл.
+        </p>
+        <p>
+          Поэтому в линейке нет одного «универсального» флакона на всё: каждый продукт собран под свою среду и
+          свою задачу.
+        </p>
+        <a href="/catalog" class="link-arrow">Посмотреть продукты <Icon name="arrow" class="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INBIOLAB -->
+  <section class="lab">
+    <div class="lab__media">
+      <Picture
+        src={fieldImg}
+        alt="Сад и теплицы на холмах в утреннем тумане"
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280, 1672]}
+        sizes="(max-width: 56em) 100vw, 50vw"
+        loading="lazy"
+        class="lab__img"
+      />
+    </div>
+    <div class="lab__text reveal">
+      <p class="eyebrow">Разработчик</p>
+      <h2>INBIOLAB: платформа микробных консорциумов</h2>
+      <div class="prose">
+        <p>
+          INBIOLAB — биотехнологическая R&amp;D-платформа, которая разрабатывает, тестирует и внедряет
+          микробиологические консорциумы под прикладные задачи. Она входит в группу компаний «ИНБИОЛАБ АГРО»:
+          за 25 лет работы в агросекторе команда накопила опыт создания и применения микробиологических препаратов
+          на сотнях тысяч гектаров.
+        </p>
+        <p>
+          Платформа работает с агрохолдингами, фермерскими хозяйствами, питомниками и элеваторами, а для частного
+          сектора выпускает розничные бренды. ВСХОД — линейка для растений, урожая и почвы. ИНБИО-СЕПТ — биопрепарат
+          для септиков и выгребных ям.
+        </p>
+      </div>
+      <a href={site.developerUrl} class="link-arrow" rel="noopener" target="_blank">
+        inbiolab.ru <Icon name="external" class="arrow" />
+      </a>
+    </div>
+  </section>
+
+  <ContactCta
+    title="Хотите узнать больше о технологии?"
+    text="Ответим на вопросы о составе, применении и испытаниях. Для бизнеса подготовим регламент под вашу культуру."
+  />
+</Base>
+
+<style>
+  .ahero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .ahero__text {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--s-4);
+    padding: var(--s-7) var(--s-7) var(--s-8) max(var(--gutter), calc((100vw - var(--container)) / 2));
+  }
+  .ahero__text .eyebrow {
+    margin-top: var(--s-4);
+  }
+  .ahero__text h1 {
+    max-width: 12em;
+  }
+  .ahero__lines {
+    position: absolute;
+    left: -2rem;
+    bottom: -1.5rem;
+    width: 12rem;
+    color: var(--leaf);
+    z-index: -1;
+  }
+  .ahero__media {
+    position: relative;
+    min-height: 24rem;
+  }
+  .ahero__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (max-width: 56em) {
+    .ahero {
+      grid-template-columns: 1fr;
+    }
+    .ahero__text {
+      padding: var(--s-6) var(--gutter);
+      order: 1;
+    }
+    .ahero__media {
+      order: 0;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+  }
+
+  .principles {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-6) var(--s-8);
+  }
+  .principle {
+    display: grid;
+    gap: var(--s-2);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--line-strong);
+  }
+  .principle h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  .principle p {
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+    max-width: 36em;
+  }
+  @media (max-width: 40em) {
+    .principles {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mech {
+    background: var(--surface);
+    border-block: 1px solid var(--line);
+  }
+  .mech__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: var(--s-7);
+  }
+  .mech__grid .link-arrow {
+    margin-top: var(--s-5);
+  }
+  @media (max-width: 56em) {
+    .mech__grid {
+      grid-template-columns: 1fr;
+      gap: var(--s-5);
+    }
+  }
+
+  .lab {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .lab__media {
+    position: relative;
+    min-height: 22rem;
+  }
+  .lab__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .lab__text {
+    display: grid;
+    gap: var(--s-5);
+    align-content: center;
+    padding: var(--section) max(var(--gutter), calc((100vw - var(--container)) / 2)) var(--section) var(--s-8);
+  }
+  @media (max-width: 56em) {
+    .lab {
+      grid-template-columns: 1fr;
+    }
+    .lab__media {
+      aspect-ratio: 16 / 9;
+      min-height: 0;
+    }
+    .lab__text {
+      padding: var(--s-7) var(--gutter);
+    }
+  }
+</style>

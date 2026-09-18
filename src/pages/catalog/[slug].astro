@@ -1,0 +1,697 @@
+---
+import { Picture } from 'astro:assets'
+import { getCollection } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+import Breadcrumbs from '../../components/Breadcrumbs.astro'
+import ContactCta from '../../components/ContactCta.astro'
+import ProductCard from '../../components/ProductCard.astro'
+import Icon from '../../components/Icon.astro'
+import { ACCENTS, tagById } from '../../data/taxonomy'
+import { site, mailto } from '../../data/site'
+
+export async function getStaticPaths() {
+  const products = await getCollection('products')
+  return products.map((product) => ({ params: { slug: product.id }, props: { product } }))
+}
+
+interface Props {
+  product: CollectionEntry<'products'>
+}
+const { product } = Astro.props
+const { data, id } = product
+const accent = ACCENTS[data.accent]
+const tags = data.tags.map(tagById).filter(Boolean)
+const coming = data.status === 'coming'
+const url = new URL(`/catalog/${id}`, Astro.site).href
+
+const all = (await getCollection('products')).sort((a, b) => a.data.order - b.data.order)
+const related = all
+  .filter((p) => p.id !== id && p.data.tags.some((t) => data.tags.includes(t)))
+  .slice(0, 3)
+
+const showSchedule = data.usage && data.usage.showSchedule && data.usage.schedule.length > 0
+
+const jsonLd: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Главная', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Продукты', item: new URL('/catalog', Astro.site).href },
+      { '@type': 'ListItem', position: 3, name: data.name, item: url },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `ВСХОД ${data.name}`,
+    alternateName: data.techName,
+    description: data.tagline,
+    brand: { '@type': 'Brand', name: 'ВСХОД' },
+    manufacturer: { '@type': 'Organization', name: site.developer, url: site.developerUrl },
+    url,
+    category: 'Микробиологические препараты для растений',
+  },
+]
+if (data.faq.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: data.faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  })
+}
+
+const sections = [
+  { id: 'for', label: 'Кому подходит', show: data.forWhom.length > 0 },
+  { id: 'tasks', label: 'Задачи', show: data.tasks.length > 0 },
+  { id: 'how', label: 'Как действует', show: !!data.howItWorks },
+  { id: 'usage', label: 'Применение', show: !!data.usage },
+  { id: 'safety', label: 'Безопасность', show: !!(data.compatibility || data.safety || data.storage) },
+  { id: 'faq', label: 'Вопросы', show: data.faq.length > 0 },
+].filter((s) => s.show)
+---
+
+<Base
+  title={data.seo.title}
+  description={data.seo.description}
+  ogImage={data.image.scene}
+  jsonLd={jsonLd}
+>
+  <article class="product" style={`--accent:${accent.color};--accent-ink:${accent.ink};--accent-soft:${accent.soft}`}>
+    <!-- Шапка продукта -->
+    <header class="phead">
+      <div class="phead__text">
+        <Breadcrumbs items={[{ label: 'Продукты', href: '/catalog' }, { label: data.name }]} />
+        <p class="eyebrow phead__eyebrow">
+          {data.techName ? `${data.techName} · линейка ВСХОД` : 'Линейка ВСХОД'}
+        </p>
+        <h1>{data.name}</h1>
+        <p class="lead">{data.tagline}</p>
+        {
+          tags.length > 0 && (
+            <ul class="phead__tags" aria-label="Подходит для">
+              {tags.map((t) => (
+                <li class="chip">{t!.label}</li>
+              ))}
+            </ul>
+          )
+        }
+        <div class="phead__actions">
+          {
+            site.ozon.available ? (
+              <a href={site.ozon.url} class="btn" rel="noopener" target="_blank">
+                Купить на Ozon
+              </a>
+            ) : (
+              <span class="btn" aria-disabled="true">
+                {coming ? 'Скоро в продаже' : 'Скоро на Ozon'}
+              </span>
+            )
+          }
+          <a href={mailto(site.mailSubjects.general, data.name)} class="btn btn--secondary">
+            <Icon name="mail" class="arrow" /> Написать нам
+          </a>
+        </div>
+        {
+          data.formats.length > 0 && (
+            <p class="small muted phead__formats">
+              Фасовка: {data.formats.join(', ')}
+            </p>
+          )
+        }
+      </div>
+      <div class="phead__media">
+        <Picture
+          src={data.image.bottle ?? data.image.scene}
+          alt={data.image.bottleAlt ?? data.image.sceneAlt}
+          formats={['avif', 'webp']}
+        widths={[480, 720, 960, 1122]}
+          sizes="(max-width: 56em) 100vw, 50vw"
+          loading="eager"
+          fetchpriority="high"
+          class="phead__img"
+        />
+      </div>
+    </header>
+
+    {
+      coming ? (
+        <section class="container section coming">
+          <div class="prose">
+            <p>{data.description}</p>
+            <p>
+              Пока страница готовится, напишите нам: расскажем о сроках выхода и подскажем, чем из действующей
+              линейки можно решить задачу сейчас.
+            </p>
+          </div>
+        </section>
+      ) : (
+        <div class="container pbody">
+          <!-- Боковая колонка -->
+          <aside class="pside">
+            <nav class="pnav" aria-label="Разделы страницы">
+              <ul class="pnav__list">
+                {sections.map((s) => (
+                  <li>
+                    <a href={`#${s.id}`}>{s.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <dl class="facts">
+              {data.formats.length > 0 && (
+                <div class="facts__row">
+                  <dt>Фасовка</dt>
+                  <dd>{data.formats.join(', ')}</dd>
+                </div>
+              )}
+              <div class="facts__row">
+                <dt>Форма</dt>
+                <dd>Жидкий микробиологический концентрат</dd>
+              </div>
+              {data.shelfLife && (
+                <div class="facts__row">
+                  <dt>Срок годности</dt>
+                  <dd>12 месяцев с даты изготовления</dd>
+                </div>
+              )}
+              <div class="facts__row">
+                <dt>Безопасность</dt>
+                <dd>Класс опасности IV</dd>
+              </div>
+            </dl>
+
+            <div class="b2b">
+              <p class="eyebrow">Для бизнеса</p>
+              <p class="b2b__text small">
+                Питомникам, хозяйствам и дистрибьюторам: обсудим объёмы, сроки и формат проверки на вашей культуре.
+              </p>
+              <a href={mailto(site.mailSubjects.wholesale, data.name)} class="btn b2b__btn">
+                Запросить оптовое предложение
+              </a>
+              <a href={mailto(site.mailSubjects.pilot, data.name)} class="btn btn--secondary b2b__btn">
+                Обсудить пилот
+              </a>
+              <a href="/business" class="link-arrow small">
+                Как мы работаем с бизнесом <Icon name="arrow" class="arrow" />
+              </a>
+            </div>
+          </aside>
+
+          <!-- Основной контент -->
+          <div class="pmain">
+            <section class="pblock" aria-labelledby="desc-title">
+              <h2 id="desc-title" class="visually-hidden">Назначение</h2>
+              <p class="pintro">{data.description}</p>
+            </section>
+
+            {data.forWhom.length > 0 && (
+              <section class="pblock" id="for" aria-labelledby="for-title">
+                <h2 id="for-title">Кому подходит</h2>
+                <ul class="list">
+                  {data.forWhom.map((x) => (
+                    <li>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {data.tasks.length > 0 && (
+              <section class="pblock" id="tasks" aria-labelledby="tasks-title">
+                <h2 id="tasks-title">Какие задачи помогает решать</h2>
+                <ul class="list list--check">
+                  {data.tasks.map((x) => (
+                    <li>{x}</li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {data.howItWorks && (
+              <section class="pblock" id="how" aria-labelledby="how-title">
+                <h2 id="how-title">Как действует</h2>
+                <p class="prose">{data.howItWorks}</p>
+              </section>
+            )}
+
+            {data.usage && (
+              <section class="pblock" id="usage" aria-labelledby="usage-title">
+                <h2 id="usage-title">Способ применения</h2>
+                <h3 class="sub">Подготовка рабочего раствора</h3>
+                <p class="prose">{data.usage.preparation}</p>
+
+                {showSchedule && (
+                  <>
+                    <h3 class="sub">Периодичность и условия применения</h3>
+                    <div class="table-wrap">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Этап</th>
+                            <th scope="col">Разведение</th>
+                            <th scope="col">Как вносить</th>
+                            <th scope="col">Когда</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.usage!.schedule.map((r) => (
+                            <tr>
+                              <th scope="row">{r.stage}</th>
+                              <td>{r.dilution}</td>
+                              <td>{r.method}</td>
+                              <td>{r.when}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+                {data.usage.note && <p class="prose note">{data.usage.note}</p>}
+              </section>
+            )}
+
+            {(data.compatibility || data.safety || data.storage) && (
+              <section class="pblock" id="safety" aria-labelledby="safety-title">
+                <h2 id="safety-title">Совместимость, безопасность и хранение</h2>
+                <dl class="defs">
+                  {data.compatibility && (
+                    <div>
+                      <dt>Совместимость с другими средствами</dt>
+                      <dd>{data.compatibility}</dd>
+                    </div>
+                  )}
+                  {data.safety && (
+                    <div>
+                      <dt>Меры безопасности</dt>
+                      <dd>{data.safety}</dd>
+                    </div>
+                  )}
+                  {data.storage && (
+                    <div>
+                      <dt>Хранение и транспортирование</dt>
+                      <dd>{data.storage}</dd>
+                    </div>
+                  )}
+                  {data.shelfLife && (
+                    <div>
+                      <dt>Срок годности и гарантии</dt>
+                      <dd>{data.shelfLife}</dd>
+                    </div>
+                  )}
+                </dl>
+              </section>
+            )}
+
+            {data.image.results.length > 0 && (
+              <section class="pblock" id="results" aria-labelledby="results-title">
+                <h2 id="results-title">Результаты применения</h2>
+                <div class="gallery">
+                  {data.image.results.map((r) => (
+                    <Picture src={r.src} alt={r.alt} formats={['avif', 'webp']}
+        widths={[400, 800]} sizes="(max-width: 40em) 100vw, 400px" loading="lazy" />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {data.faq.length > 0 && (
+              <section class="pblock" id="faq" aria-labelledby="faq-title">
+                <h2 id="faq-title">Частые вопросы</h2>
+                <div class="faq">
+                  {data.faq.map((f) => (
+                    <details class="faq__item">
+                      <summary class="faq__q">
+                        {f.q}
+                        <Icon name="chevron" class="faq__icon" />
+                      </summary>
+                      <p class="faq__a">{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section class="container section--tight related" aria-labelledby="related-title">
+          <div class="section-head section-head--row">
+            <h2 id="related-title">Похожие задачи</h2>
+            <a href="/catalog" class="link-arrow">
+              Все продукты <Icon name="arrow" class="arrow" />
+            </a>
+          </div>
+          <div class="grid">
+            {related.map((p) => (
+              <ProductCard product={p} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </article>
+
+  <ContactCta
+    compact
+    title={`Вопрос по продукту «${data.name}»?`}
+    text="Напишите, как и на какой культуре собираетесь применять. Ответим по разведению, срокам и совместимости."
+    product={data.name}
+  />
+</Base>
+
+<style>
+  /* ---------- шапка ---------- */
+  .phead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .phead__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    justify-content: center;
+    padding: var(--s-7) var(--s-7) var(--s-7) max(var(--gutter), calc((100vw - var(--container)) / 2));
+  }
+  .phead__eyebrow {
+    color: var(--accent-ink);
+    margin-top: var(--s-4);
+  }
+  .phead__text h1 {
+    max-width: 12em;
+  }
+  .phead__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+  .phead__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    margin-top: var(--s-2);
+  }
+  .phead__media {
+    position: relative;
+    min-height: 26rem;
+  }
+  .phead__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (max-width: 56em) {
+    .phead {
+      grid-template-columns: 1fr;
+    }
+    .phead__text {
+      padding: var(--s-6) var(--gutter);
+      order: 1;
+    }
+    .phead__media {
+      order: 0;
+      aspect-ratio: 4 / 3;
+      min-height: 0;
+    }
+  }
+
+  /* ---------- тело ---------- */
+  .pbody {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: var(--s-9);
+    padding-block: var(--s-8);
+  }
+  .pside {
+    display: grid;
+    gap: var(--s-6);
+    align-content: start;
+    position: sticky;
+    top: 5.5rem;
+  }
+  .pnav__list {
+    list-style: none;
+    display: grid;
+    border-left: 2px solid var(--line);
+  }
+  .pnav__list a {
+    display: block;
+    padding: var(--s-2) var(--s-4);
+    margin-left: -2px;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+    color: var(--ink-2);
+    font-size: 0.9375rem;
+    transition:
+      color var(--dur) var(--ease-out),
+      border-color var(--dur) var(--ease-out);
+  }
+  .pnav__list a:hover {
+    color: var(--forest);
+    border-left-color: var(--accent);
+  }
+  .facts {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-5);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .facts__row {
+    display: grid;
+    gap: var(--s-1);
+  }
+  .facts dt {
+    font-size: var(--fs-0);
+    color: var(--ink-3);
+  }
+  .facts dd {
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+  .b2b {
+    display: grid;
+    gap: var(--s-3);
+    padding: var(--s-5);
+    border-top: 2px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+  }
+  .b2b__text {
+    color: var(--ink-2);
+  }
+  .b2b__btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+  .b2b .link-arrow {
+    margin-top: var(--s-1);
+  }
+  @media (max-width: 64em) {
+    .pbody {
+      grid-template-columns: 1fr;
+      gap: var(--s-7);
+    }
+    .pside {
+      position: static;
+      grid-template-columns: 1fr 1fr;
+    }
+    .pnav {
+      display: none;
+    }
+    .facts {
+      align-self: start;
+    }
+  }
+  @media (max-width: 40em) {
+    .pside {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pmain {
+    display: grid;
+    gap: var(--s-8);
+    max-width: 46rem;
+  }
+  .pblock {
+    display: grid;
+    gap: var(--s-4);
+    scroll-margin-top: 5.5rem;
+  }
+  .pintro {
+    font-size: var(--fs-2);
+    line-height: 1.55;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+  .sub {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: var(--s-2);
+  }
+  .list {
+    list-style: none;
+    display: grid;
+    gap: var(--s-2);
+    color: var(--ink-2);
+  }
+  .list li {
+    position: relative;
+    padding-left: 1.25rem;
+  }
+  .list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 0.5rem;
+    height: 1px;
+    background: var(--accent-ink);
+  }
+  .list--check li::before {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--accent);
+    top: 0.55em;
+  }
+  .note {
+    padding: var(--s-4) var(--s-5);
+    background: var(--surface);
+    border-left: 2px solid var(--accent);
+    font-size: 0.9375rem;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .table th,
+  .table td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--s-3) var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .table thead th {
+    font-size: var(--fs-0);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    background: var(--surface-2);
+  }
+  .table tbody th {
+    font-weight: 600;
+    color: var(--forest);
+  }
+  .table tbody tr:last-child th,
+  .table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .table td:nth-child(2) {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .defs {
+    display: grid;
+    gap: var(--s-5);
+  }
+  .defs dt {
+    font-weight: 600;
+    margin-bottom: var(--s-1);
+  }
+  .defs dd {
+    color: var(--ink-2);
+  }
+  .gallery {
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+  .gallery img {
+    border-radius: var(--radius);
+  }
+  .faq {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-4);
+    padding: var(--s-4) 0;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    color: var(--forest);
+  }
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+  .faq__icon {
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    transform: rotate(90deg);
+    transition: transform var(--dur) var(--ease-out);
+    color: var(--ink-3);
+  }
+  .faq__item[open] .faq__icon {
+    transform: rotate(-90deg);
+  }
+  .faq__a {
+    padding: 0 0 var(--s-5);
+    color: var(--ink-2);
+    max-width: 60ch;
+  }
+  .coming {
+    padding-block: var(--s-8);
+  }
+  .related {
+    border-top: 1px solid var(--line);
+  }
+  .grid {
+    display: grid;
+    gap: var(--s-5);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  @media (max-width: 64em) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 40em) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
