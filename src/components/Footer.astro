@@ -11,7 +11,7 @@ const year = new Date().getFullYear()
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
-        <Image src={logo} alt="ВСХОД. Наука, рост, будущее" width="120" height="117" densities={[1, 2]} loading="lazy" />
+        <Image src={logo} alt="ВСХОД. Наука, рост, будущее" width={220} densities={[1, 2]} loading="lazy" />
         <p class="small muted footer__claim">
           {site.claim}. Розничный бренд, разработано
           <a href={site.developerUrl} rel="noopener" target="_blank">{site.developer}</a>.
@@ -74,7 +74,7 @@ const year = new Date().getFullYear()
     }
   }
   .footer__brand img {
-    width: 7.5rem;
+    width: 13.75rem;
     height: auto;
   }
   .footer__claim {

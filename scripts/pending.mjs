@@ -13,7 +13,7 @@ const files = readdirSync(dir).filter((f) => f.endsWith('.json'))
 
 const general = [
   'Домен: astro.config.mjs → site, public/robots.txt → Sitemap',
-  'Логотип в векторе: заменить src/assets/brand/logo-vshod.png и logo-mark.png (сейчас вырезано из слайда презентации)',
+  'Логотип: установлен фирменный (лента-бесконечность с листьями). Файлы растровые PNG (src/assets/brand/); при желании заменить на SVG-вектор для идеальной резкости на любом размере',
   'Ссылка на Ozon: src/data/site.ts → ozon.available = true, ozon.url',
   'Телефон (если нужен): src/data/site.ts → contacts.phone',
   'Реквизиты ИП (ИНН, ОГРНИП) — понадобятся, если появятся формы/оферта; сейчас на сайте не выводятся',
