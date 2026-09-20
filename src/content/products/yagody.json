@@ -79,7 +79,10 @@
   ],
   "image": {
     "scene": "../../assets/scenes/berries-currant-strawberry.jpg",
-    "sceneAlt": "Спелая клубника и красная смородина на кустах в саду"
+    "sceneAlt": "Спелая клубника и красная смородина на кустах в саду",
+    "focus": "50% 55%",
+    "page": "../../assets/scenes/berries-currant-black.jpg",
+    "pageAlt": "Чёрная смородина и клубника на кустах в утреннем свете"
   },
   "seo": {
     "title": "Для ягод — ВСХОД, живые бактерии для ягодных культур",

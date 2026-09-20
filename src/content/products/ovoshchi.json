@@ -78,7 +78,10 @@
   ],
   "image": {
     "scene": "../../assets/scenes/vegetables-greenhouse-tomato.jpg",
-    "sceneAlt": "Томаты и салат на грядке в теплице в утреннем свете"
+    "sceneAlt": "Томаты и салат на грядке в теплице в утреннем свете",
+    "focus": "50% 45%",
+    "page": "../../assets/scenes/vegetables-greenhouse-rows.jpg",
+    "pageAlt": "Ряды томатов и огурцов в теплице"
   },
   "seo": {
     "title": "Для овощных культур — ВСХОД, живые бактерии для огорода",

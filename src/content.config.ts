@@ -73,6 +73,16 @@ const products = defineCollection({
         /** Сцена применения (культура/среда). Файл в src/assets/scenes. */
         scene: image(),
         sceneAlt: z.string(),
+        /**
+         * Точка фокуса кадра для object-position, например "50% 70%":
+         * первое число — по горизонтали, второе — по вертикали (0% верх, 100% низ).
+         * Нужна, потому что портретные сцены 4:5 обрезаются в карточке 4:3
+         * и в шапке страницы.
+         */
+        focus: z.string().default('50% 50%'),
+        /** Вторая сцена для шапки страницы продукта. Пусто → используется scene. */
+        page: image().optional(),
+        pageAlt: z.string().optional(),
         /** Фото флакона. Пока нет ни у одного продукта — карточка показывает сцену. */
         bottle: image().optional(),
         bottleAlt: z.string().optional(),

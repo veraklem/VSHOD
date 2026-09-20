@@ -78,7 +78,10 @@
   ],
   "image": {
     "scene": "../../assets/scenes/mbiofit-plant-dawn.jpg",
-    "sceneAlt": "Здоровый куст с крупными листьями на грядке на рассвете"
+    "sceneAlt": "Здоровый куст с крупными листьями на грядке на рассвете",
+    "focus": "50% 50%",
+    "page": "../../assets/scenes/mbiofit-plant-lake.jpg",
+    "pageAlt": "Здоровое растение на берегу озера в рассветном свете"
   },
   "seo": {
     "title": "MBioFit — ВСХОД, универсальное средство для сада",
