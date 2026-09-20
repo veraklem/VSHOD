@@ -404,7 +404,8 @@ const sections = [
   }
   .phead__media {
     position: relative;
-    min-height: 26rem;
+    aspect-ratio: 1 / 1;
+    max-height: 52rem;
   }
   .phead__img {
     position: absolute;
@@ -424,8 +425,8 @@ const sections = [
     }
     .phead__media {
       order: 0;
-      aspect-ratio: 4 / 3;
-      min-height: 0;
+      aspect-ratio: 4 / 5;
+      max-height: none;
     }
   }
 

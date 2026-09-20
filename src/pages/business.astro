@@ -6,7 +6,7 @@ import ContactCta from '../components/ContactCta.astro'
 import Icon from '../components/Icon.astro'
 import { site, mailto } from '../data/site'
 import heroImg from '../assets/scenes/b2b-nursery-rows.jpg'
-import gardenImg from '../assets/scenes/landscape-dawn-garden.jpg'
+import gardenImg from '../assets/scenes/vegetables-greenhouse-rows.jpg'
 
 const audiences = [
   {
@@ -151,9 +151,9 @@ const jsonLd = [
     <div class="how__media">
       <Picture
         src={gardenImg}
-        alt="Сад и теплицы на холмах в утреннем тумане"
+        alt="Ряды томатов и огурцов в промышленной теплице"
         formats={['avif', 'webp']}
-        widths={[640, 960, 1280, 1672]}
+        widths={[480, 720, 960, 1122]}
         sizes="(max-width: 56em) 100vw, 50vw"
         loading="lazy"
         class="how__img"
