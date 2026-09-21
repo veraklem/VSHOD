@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap'
 // (используется для canonical, Open Graph, sitemap.xml и Schema.org).
 // На Vercel до подключения домена можно временно указать адрес *.vercel.app.
 export default defineConfig({
-  site: 'https://vshod.example',
+  site: 'https://vshod.vercel.app',
   output: 'static',
   trailingSlash: 'never',
   integrations: [sitemap()],

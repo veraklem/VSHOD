@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Домен подставить после выбора (см. astro.config.mjs → site)
-Sitemap: https://vshod.example/sitemap-index.xml
+Sitemap: https://vshod.vercel.app/sitemap-index.xml

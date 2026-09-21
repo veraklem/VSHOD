@@ -12,7 +12,7 @@ const dir = fileURLToPath(new URL('../src/content/products/', import.meta.url))
 const files = readdirSync(dir).filter((f) => f.endsWith('.json'))
 
 const general = [
-  'Домен: astro.config.mjs → site, public/robots.txt → Sitemap',
+  'Домен: сейчас vshod.vercel.app; после покупки заменить в astro.config.mjs → site и public/robots.txt → Sitemap',
   'Логотип: установлен фирменный (лента-бесконечность с листьями). Файлы растровые PNG (src/assets/brand/); при желании заменить на SVG-вектор для идеальной резкости на любом размере',
   'Ссылка на Ozon: src/data/site.ts → ozon.available = true, ozon.url',
   'Телефон (если нужен): src/data/site.ts → contacts.phone',
