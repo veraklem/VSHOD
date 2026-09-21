@@ -6,8 +6,8 @@ import ContactCta from '../components/ContactCta.astro'
 import GrowthLines from '../components/GrowthLines.astro'
 import Icon from '../components/Icon.astro'
 import { site } from '../data/site'
-import heroImg from '../assets/scenes/mbiofit-plant-lake.jpg'
-import fieldImg from '../assets/scenes/seedlings-greenhouse-cells.jpg'
+import heroImg from '../assets/scenes/inbiofit-plant-lake.jpg'
+import fieldImg from '../assets/scenes/nursery-greenhouse-benches.jpg'
 
 const principles = [
   {
@@ -125,9 +125,9 @@ const jsonLd = [
     <div class="lab__media">
       <Picture
         src={fieldImg}
-        alt="Молодая рассада в кассетах в теплице"
+        alt="Рассада и саженцы на стеллажах питомника в теплице"
         formats={['avif', 'webp']}
-        widths={[480, 720, 960, 1122]}
+        widths={[480, 720, 960, 1254]}
         sizes="(max-width: 56em) 100vw, 50vw"
         loading="lazy"
         class="lab__img"
@@ -265,11 +265,16 @@ const jsonLd = [
 
   .lab {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .lab__media {
+    min-width: 0;
+    width: 100%;
   }
   .lab__media {
     position: relative;
-    min-height: 22rem;
+    aspect-ratio: 1 / 1;
+    max-height: 44rem;
   }
   .lab__img {
     position: absolute;

@@ -27,7 +27,7 @@ const products = defineCollection({
     z.object({
       /** Порядок в каталоге. */
       order: z.number(),
-      /** Розничное название на этикетке: «Для рассады», «MBioFit». */
+      /** Розничное название на этикетке: «Для рассады», «INBIOFIT». */
       name: z.string(),
       /** Техническое имя из паспорта: ИНБИО-РАСС. Показывается мелко. */
       techName: z.string().optional(),

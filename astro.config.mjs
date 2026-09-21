@@ -9,7 +9,6 @@ export default defineConfig({
   site: 'https://vshod.example',
   output: 'static',
   trailingSlash: 'never',
-  build: { format: 'file' },
   integrations: [sitemap()],
   image: {
     // Полные исходники лежат в src/assets/scenes; Astro сам делает AVIF/WebP и srcset.

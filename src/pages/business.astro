@@ -6,7 +6,7 @@ import ContactCta from '../components/ContactCta.astro'
 import Icon from '../components/Icon.astro'
 import { site, mailto } from '../data/site'
 import heroImg from '../assets/scenes/b2b-nursery-rows.jpg'
-import gardenImg from '../assets/scenes/vegetables-greenhouse-rows.jpg'
+import gardenImg from '../assets/scenes/strawberry-field-rows.jpg'
 
 const audiences = [
   {
@@ -49,7 +49,7 @@ const jsonLd = [
 
 <Base
   title="Для бизнеса: оптовые поставки и пилотное применение ВСХОД"
-  description="Микробиологические решения ВСХОД и INBIOLAB для питомников, фермерских хозяйств, агрохолдингов и дистрибьюторов. Оптовая поставка, пилотное применение, регламенты под вашу культуру."
+  description="Решения ВСХОД и INBIOLAB для питомников, фермерских хозяйств, агрохолдингов и дистрибьюторов: оптовая поставка, пилотное применение, регламент под вашу культуру."
   ogImage={heroImg}
   jsonLd={jsonLd}
 >
@@ -151,9 +151,9 @@ const jsonLd = [
     <div class="how__media">
       <Picture
         src={gardenImg}
-        alt="Ряды томатов и огурцов в промышленной теплице"
+        alt="Ряды клубники и молодых саженцев на поле у теплиц на рассвете"
         formats={['avif', 'webp']}
-        widths={[480, 720, 960, 1122]}
+        widths={[640, 960, 1280, 1672]}
         sizes="(max-width: 56em) 100vw, 50vw"
         loading="lazy"
         class="how__img"
@@ -311,11 +311,16 @@ const jsonLd = [
 
   .how {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .how__media {
+    min-width: 0;
+    width: 100%;
   }
   .how__media {
     position: relative;
-    min-height: 22rem;
+    aspect-ratio: 3 / 2;
+    align-self: stretch;
   }
   .how__img {
     position: absolute;

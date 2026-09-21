@@ -77,9 +77,11 @@
     }
   ],
   "image": {
-    "scene": "../../assets/scenes/insects-leaf-macro.jpg",
-    "sceneAlt": "Крупный здоровый лист растения на фоне сада",
-    "focus": "50% 50%"
+    "scene": "../../assets/scenes/insects-aphids-magnifier.jpg",
+    "sceneAlt": "Тля на листе томата под увеличительным стеклом в теплице",
+    "focus": "50% 50%",
+    "page": "../../assets/scenes/insects-leaf-macro.jpg",
+    "pageAlt": "Крупный здоровый лист растения на фоне сада"
   },
   "seo": {
     "title": "От насекомых — ВСХОД, биозащита растений от вредителей",
