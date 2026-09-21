@@ -64,7 +64,7 @@ const jsonLd = [
         alt="Молодое растение у озера в рассветном свете"
         formats={['avif', 'webp']}
         widths={[480, 720, 960, 1122]}
-        sizes="(max-width: 56em) 100vw, 50vw"
+        sizes="(max-width: 56em) 100vw, (max-width: 84em) 50vw, 42rem"
         loading="eager"
         fetchpriority="high"
         class="ahero__img"
@@ -128,7 +128,7 @@ const jsonLd = [
         alt="Рассада и саженцы на стеллажах питомника в теплице"
         formats={['avif', 'webp']}
         widths={[480, 720, 960, 1254]}
-        sizes="(max-width: 56em) 100vw, 50vw"
+        sizes="(max-width: 56em) 100vw, (max-width: 84em) 48vw, 38rem"
         loading="lazy"
         class="lab__img"
       />
@@ -166,6 +166,8 @@ const jsonLd = [
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     border-bottom: 1px solid var(--line);
+    width: min(100%, calc(var(--container) + 2 * var(--gutter)));
+    margin-inline: auto;
   }
   .ahero__text {
     position: relative;
@@ -175,7 +177,7 @@ const jsonLd = [
     flex-direction: column;
     justify-content: center;
     gap: var(--s-4);
-    padding: var(--s-7) var(--s-7) var(--s-8) max(var(--gutter), calc((100vw - var(--container)) / 2));
+    padding: var(--s-7) var(--s-7) var(--s-8) var(--gutter);
   }
   .ahero__text .eyebrow {
     margin-top: var(--s-4);
@@ -266,15 +268,18 @@ const jsonLd = [
   .lab {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-  .lab__media {
-    min-width: 0;
-    width: 100%;
+    gap: var(--s-8);
+    align-items: center;
+    width: min(100% - 2 * var(--gutter), var(--container));
+    margin-inline: auto;
+    padding-block: var(--section);
   }
   .lab__media {
     position: relative;
+    min-width: 0;
     aspect-ratio: 1 / 1;
-    max-height: 44rem;
+    border-radius: var(--radius);
+    overflow: hidden;
   }
   .lab__img {
     position: absolute;
@@ -287,18 +292,18 @@ const jsonLd = [
     display: grid;
     gap: var(--s-5);
     align-content: center;
-    padding: var(--section) max(var(--gutter), calc((100vw - var(--container)) / 2)) var(--section) var(--s-8);
+    padding: 0;
   }
   @media (max-width: 56em) {
     .lab {
       grid-template-columns: 1fr;
     }
-    .lab__media {
-      aspect-ratio: 16 / 9;
-      min-height: 0;
+    .lab {
+      gap: var(--s-6);
+      padding-block: var(--s-7);
     }
-    .lab__text {
-      padding: var(--s-7) var(--gutter);
+    .lab__media {
+      aspect-ratio: 4 / 3;
     }
   }
 </style>

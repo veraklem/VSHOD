@@ -131,7 +131,7 @@ const sections = [
           alt={data.image.bottleAlt ?? data.image.pageAlt ?? data.image.sceneAlt}
           formats={['avif', 'webp']}
         widths={[480, 720, 960, 1122]}
-          sizes="(max-width: 56em) 100vw, 50vw"
+          sizes="(max-width: 56em) 100vw, (max-width: 84em) 50vw, 42rem"
           loading="eager"
           fetchpriority="high"
           class="phead__img"
@@ -375,13 +375,15 @@ const sections = [
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     border-bottom: 1px solid var(--line);
+    width: min(100%, calc(var(--container) + 2 * var(--gutter)));
+    margin-inline: auto;
   }
   .phead__text {
     display: flex;
     flex-direction: column;
     gap: var(--s-4);
     justify-content: center;
-    padding: var(--s-7) var(--s-7) var(--s-7) max(var(--gutter), calc((100vw - var(--container)) / 2));
+    padding: var(--s-7) var(--s-7) var(--s-7) var(--gutter);
   }
   .phead__eyebrow {
     color: var(--accent-ink);

@@ -10,10 +10,8 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'never',
   integrations: [sitemap()],
-  image: {
-    // Полные исходники лежат в src/assets/scenes; Astro сам делает AVIF/WebP и srcset.
-    responsiveStyles: true,
-    layout: 'constrained',
-  },
+  // Картинки: srcset и sizes заданы явно в компонентах (widths/sizes),
+  // авто-режим responsive-картинок Astro выключен, чтобы на retina
+  // выбирались файлы нужного размера.
   prefetch: false,
 })

@@ -59,7 +59,7 @@ const steps = [
         alt="Молодая рассада в кассете на подоконнике в утреннем свете"
         formats={['avif', 'webp']}
         widths={[480, 720, 960, 1122]}
-        sizes="(max-width: 56em) 100vw, 55vw"
+        sizes="(max-width: 56em) 100vw, (max-width: 84em) 50vw, 42rem"
         loading="eager"
         fetchpriority="high"
         class="hero__img"
@@ -143,7 +143,7 @@ const steps = [
         alt="Утренний туман над полем и рекой на рассвете"
         formats={['avif', 'webp']}
         widths={[640, 960, 1280, 1672]}
-        sizes="(max-width: 56em) 100vw, 50vw"
+        sizes="(max-width: 56em) 100vw, (max-width: 84em) 48vw, 38rem"
         loading="lazy"
         class="trust__img"
       />
@@ -173,9 +173,11 @@ const steps = [
   /* ---------- hero ---------- */
   .hero {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     min-height: min(84vh, 46rem);
     border-bottom: 1px solid var(--line);
+    width: min(100%, calc(var(--container) + 2 * var(--gutter)));
+    margin-inline: auto;
   }
   .hero__text {
     position: relative;
@@ -184,7 +186,7 @@ const steps = [
     flex-direction: column;
     justify-content: center;
     gap: var(--s-5);
-    padding: var(--s-9) var(--s-7) var(--s-9) max(var(--gutter), calc((100vw - var(--container)) / 2));
+    padding: var(--s-9) var(--s-7) var(--s-9) var(--gutter);
     overflow: hidden;
   }
   .hero__text h1 {
@@ -373,10 +375,18 @@ const steps = [
   .trust {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--s-8);
+    align-items: center;
+    width: min(100% - 2 * var(--gutter), var(--container));
+    margin-inline: auto;
+    padding-block: var(--section);
   }
   .trust__media {
     position: relative;
-    min-height: 22rem;
+    min-width: 0;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius);
+    overflow: hidden;
   }
   .trust__img {
     position: absolute;
@@ -389,18 +399,18 @@ const steps = [
     display: grid;
     gap: var(--s-5);
     align-content: center;
-    padding: var(--section) max(var(--gutter), calc((100vw - var(--container)) / 2)) var(--section) var(--s-8);
+    padding: 0;
   }
   @media (max-width: 56em) {
     .trust {
       grid-template-columns: 1fr;
     }
+    .trust {
+      gap: var(--s-6);
+      padding-block: var(--s-7);
+    }
     .trust__media {
       aspect-ratio: 16 / 9;
-      min-height: 0;
-    }
-    .trust__text {
-      padding: var(--s-7) var(--gutter);
     }
   }
 </style>

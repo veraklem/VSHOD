@@ -74,7 +74,7 @@ const jsonLd = [
         alt="Ряды саженцев в контейнерах в питомнике на рассвете"
         formats={['avif', 'webp']}
         widths={[640, 960, 1280, 1672]}
-        sizes="100vw"
+        sizes="(max-width: 66em) 100vw, 64rem"
         loading="eager"
         fetchpriority="high"
         class="bhero__img"
@@ -154,7 +154,7 @@ const jsonLd = [
         alt="Ряды клубники и молодых саженцев на поле у теплиц на рассвете"
         formats={['avif', 'webp']}
         widths={[640, 960, 1280, 1672]}
-        sizes="(max-width: 56em) 100vw, 50vw"
+        sizes="(max-width: 56em) 100vw, (max-width: 84em) 48vw, 38rem"
         loading="lazy"
         class="how__img"
       />
@@ -215,9 +215,13 @@ const jsonLd = [
   }
   .bhero__media {
     aspect-ratio: 21 / 9;
-    min-height: 16rem;
-    max-height: 34rem;
+    min-height: 14rem;
     position: relative;
+    width: min(100% - 2 * var(--gutter), 64rem);
+    margin-inline: auto;
+    margin-bottom: var(--s-8);
+    border-radius: var(--radius);
+    overflow: hidden;
   }
   .bhero__img {
     position: absolute;
@@ -312,15 +316,18 @@ const jsonLd = [
   .how {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-  .how__media {
-    min-width: 0;
-    width: 100%;
+    gap: var(--s-8);
+    align-items: center;
+    width: min(100% - 2 * var(--gutter), var(--container));
+    margin-inline: auto;
+    padding-block: var(--section);
   }
   .how__media {
     position: relative;
+    min-width: 0;
     aspect-ratio: 3 / 2;
-    align-self: stretch;
+    border-radius: var(--radius);
+    overflow: hidden;
   }
   .how__img {
     position: absolute;
@@ -333,7 +340,7 @@ const jsonLd = [
     display: grid;
     gap: var(--s-5);
     align-content: center;
-    padding: var(--section) max(var(--gutter), calc((100vw - var(--container)) / 2)) var(--section) var(--s-8);
+    padding: 0;
   }
   .how__steps {
     display: grid;
@@ -354,12 +361,12 @@ const jsonLd = [
     .how {
       grid-template-columns: 1fr;
     }
+    .how {
+      gap: var(--s-6);
+      padding-block: var(--s-7);
+    }
     .how__media {
       aspect-ratio: 16 / 9;
-      min-height: 0;
-    }
-    .how__text {
-      padding: var(--s-7) var(--gutter);
     }
   }
 </style>
